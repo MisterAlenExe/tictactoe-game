@@ -34,4 +34,7 @@ class User {
       'email': email,
     };
   }
+
+  @override
+  String toString() => 'User(uid: $uid, email: $email)';
 }
