@@ -63,7 +63,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           );
-                    } else if (game.status == GameStatus.playing &&
+                    } else if ((game.status == GameStatus.playing ||
+                            game.status == GameStatus.finished) &&
                         game.players
                             .any((element) => element!.uid == user.uid)) {
                       Navigator.push(
