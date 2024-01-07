@@ -17,10 +17,14 @@ class SplashPage extends StatelessWidget {
         child: StreamBuilder(
           stream: authService.user,
           builder: (context, snapshot) {
+            print(snapshot.connectionState);
             if (snapshot.connectionState == ConnectionState.active) {
-              final User? user = snapshot.data;
+              final User user = snapshot.data!;
 
-              return user == null ? const LoginPage() : const HomePage();
+              print(user);
+              print(user.isEmpty);
+
+              return user.isEmpty ? const LoginPage() : const HomePage();
             }
             return const CircularProgressIndicator();
           },

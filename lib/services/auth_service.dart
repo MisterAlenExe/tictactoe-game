@@ -5,30 +5,20 @@ import 'package:tictactoe_game/models/user_model.dart';
 class AuthService {
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
-  User? _userFromFirebase(auth.User? user) {
-    if (user == null) {
-      return null;
-    }
-    return User(
-      uid: user.uid,
-      email: user.email,
-    );
+  Stream<User> get user {
+    return _firebaseAuth.authStateChanges().map(User.fromFirestore);
   }
 
-  Stream<User?>? get user {
-    return _firebaseAuth.authStateChanges().map(_userFromFirebase);
-  }
-
-  Future<User?> signInWithEmailAndPassword({
+  Future<User> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
     final auth.UserCredential userCredential = await _firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password);
-    return _userFromFirebase(userCredential.user);
+    return User.fromFirestore(userCredential.user);
   }
 
-  Future<User?> createUserWithEmailAndPassword({
+  Future<User> createUserWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -37,10 +27,8 @@ class AuthService {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userCredential.user!.uid)
-        .set({
-      'email': email,
-    });
-    return _userFromFirebase(userCredential.user);
+        .set(User.fromFirestore(userCredential.user!).toFirestore());
+    return User.fromFirestore(userCredential.user);
   }
 
   Future<void> signOut() async {

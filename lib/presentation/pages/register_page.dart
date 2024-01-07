@@ -93,10 +93,31 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
 
                   try {
-                    await authService.createUserWithEmailAndPassword(
+                    await authService
+                        .createUserWithEmailAndPassword(
                       email: _emailController.text,
                       password: _passwordController.text,
-                    );
+                    )
+                        .then((user) {
+                      if (user.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Error registering user',
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.pushReplacementNamed(context, '/login');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'User registered successfully. Please login',
+                            ),
+                          ),
+                        );
+                      }
+                    });
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
