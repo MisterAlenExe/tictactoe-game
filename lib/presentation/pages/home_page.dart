@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tic Tac Toe'),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () async {
@@ -37,46 +38,73 @@ class _HomePageState extends State<HomePage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<Game> games = snapshot.data!;
+            games.sort((a, b) => a.status.index.compareTo(b.status.index));
             return ListView.builder(
               itemCount: games.length,
               itemBuilder: (context, index) {
                 final Game game = games[index];
 
-                return ListTile(
-                  title: Text('Game ${game.uid}'),
-                  subtitle: Text('Status: ${game.status.name}'),
-                  onTap: () async {
-                    if (game.status == GameStatus.waiting &&
-                        game.players[0]!.uid != user.uid) {
-                      await gameService
-                          .joinGame(
-                            game: games[index],
-                            player: user,
-                          )
-                          .then(
-                            (_) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TicTacToeBoard(
-                                  gameUid: games[index].uid,
+                return Card(
+                  elevation: 3,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 16,
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      '${game.players[0]!.email}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Status: ${game.status.name.toUpperCase()}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: game.status == GameStatus.waiting
+                            ? Colors.green
+                            : game.status == GameStatus.playing
+                                ? Colors.blue
+                                : Colors.grey,
+                      ),
+                    ),
+                    tileColor: game.status == GameStatus.playing
+                        ? Colors.yellow[100]
+                        : null,
+                    onTap: () async {
+                      if (game.status == GameStatus.waiting &&
+                          game.players[0]!.uid != user.uid) {
+                        await gameService
+                            .joinGame(
+                              game: games[index],
+                              player: user,
+                            )
+                            .then(
+                              (_) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TicTacToeBoard(
+                                    gameUid: games[index].uid,
+                                  ),
                                 ),
                               ),
+                            );
+                      } else if ((game.status == GameStatus.playing ||
+                              game.status == GameStatus.finished) &&
+                          game.players
+                              .any((element) => element!.uid == user.uid)) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TicTacToeBoard(
+                              gameUid: games[index].uid,
                             ),
-                          );
-                    } else if ((game.status == GameStatus.playing ||
-                            game.status == GameStatus.finished) &&
-                        game.players
-                            .any((element) => element!.uid == user.uid)) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TicTacToeBoard(
-                            gameUid: games[index].uid,
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      }
+                    },
+                  ),
                 );
               },
             );
