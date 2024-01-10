@@ -12,7 +12,7 @@ abstract class AuthDataSource {
     required String password,
   });
   Future<void> signOut();
-  Stream<UserModel?> getUser();
+  Stream<UserModel> getUser();
 }
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -60,7 +60,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Stream<UserModel?> getUser() {
+  Stream<UserModel> getUser() {
     return firebaseAuth.authStateChanges().map(UserModel.fromFirebase);
   }
 }

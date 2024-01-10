@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tictactoe_game/firebase_options.dart';
-import 'package:tictactoe_game/models/user_model.dart';
-import 'package:tictactoe_game/presentation/pages/home_page.dart';
-import 'package:tictactoe_game/presentation/pages/login_page.dart';
-import 'package:tictactoe_game/presentation/pages/register_page.dart';
-import 'package:tictactoe_game/presentation/pages/splash_page.dart';
-import 'package:tictactoe_game/services/auth_service.dart';
-import 'package:tictactoe_game/services/game_service.dart';
+import 'package:tictactoe_game/injection_container.dart';
+import 'package:tictactoe_game/features/auth/logic/auth_bloc/auth_bloc.dart';
+import 'package:tictactoe_game/features/auth/logic/session_cubit/session_cubit.dart';
+import 'package:tictactoe_game/features/game/screens/home_screen.dart';
+import 'package:tictactoe_game/features/nav/auth_navigator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +14,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  setupLocator();
 
   runApp(const App());
 }
@@ -25,17 +25,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        Provider<AuthService>(
-          create: (_) => AuthService(),
+        BlocProvider<SessionCubit>(
+          create: (_) => locator<SessionCubit>()..fetchUser(),
         ),
-        Provider<GameService>(
-          create: (_) => GameService(),
-        ),
-        StreamProvider(
-          create: (context) => context.read<AuthService>().user,
-          initialData: User.empty(),
+        BlocProvider<AuthBloc>(
+          create: (_) => locator<AuthBloc>(),
         ),
       ],
       child: MaterialApp(
@@ -44,12 +40,10 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/',
+        initialRoute: AuthNavigator.routeName,
         routes: {
-          '/': (context) => const SplashPage(),
-          '/login': (context) => const LoginPage(),
-          '/register': (context) => const RegisterPage(),
-          '/home': (context) => const HomePage(),
+          AuthNavigator.routeName: (_) => const AuthNavigator(),
+          HomeScreen.routeName: (_) => const HomeScreen(),
         },
       ),
     );

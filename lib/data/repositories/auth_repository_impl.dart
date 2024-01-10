@@ -11,7 +11,7 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl({required this.authDataSource});
 
   @override
-  Either<Failure, Stream<UserEntity?>> getUser() {
+  Either<Failure, Stream<UserEntity>> getUser() {
     try {
       final result = authDataSource.getUser();
       return Right(result);

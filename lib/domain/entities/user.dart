@@ -9,6 +9,12 @@ class UserEntity extends Equatable {
     required this.email,
   });
 
+  const UserEntity.empty()
+      : uid = '',
+        email = '';
+
+  bool get isEmpty => uid.isEmpty || email.isEmpty;
+
   @override
   List<Object?> get props => [uid, email];
 }

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
+  final bool isEnabled;
 
   const CustomButton({
     super.key,
     required this.onPressed,
     required this.text,
+    required this.isEnabled,
   });
 
   @override
@@ -23,10 +25,18 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0), // Button border radius
         ),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 18),
-      ),
+      child: isEnabled
+          ? Text(
+              text,
+              style: const TextStyle(fontSize: 16),
+            )
+          : const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
     );
   }
 }
