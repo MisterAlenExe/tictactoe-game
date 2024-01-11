@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/data/models/user_model.dart';
 
-import '../../mocks/mocks.dart';
+import '../../utils/mocks/mocks.dart';
 
 void main() {
   const testUserModel = UserModel(

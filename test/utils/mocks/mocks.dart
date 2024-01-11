@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mocktail/mocktail.dart';
@@ -7,6 +8,13 @@ import 'package:tictactoe_game/domain/usecases/auth/get_user.dart';
 import 'package:tictactoe_game/domain/usecases/auth/sign_in.dart';
 import 'package:tictactoe_game/domain/usecases/auth/sign_out.dart';
 import 'package:tictactoe_game/domain/usecases/auth/sign_up.dart';
+import 'package:tictactoe_game/features/auth/logic/auth_bloc/auth_bloc.dart';
+import 'package:tictactoe_game/features/auth/logic/session_cubit/session_cubit.dart';
+
+class MockAuthBloc extends MockBloc<AuthEvent, AuthState> implements AuthBloc {}
+
+class MockSessionCubit extends MockCubit<SessionState>
+    implements SessionCubit {}
 
 class MockGetUserUseCase extends Mock implements GetUserUseCase {}
 

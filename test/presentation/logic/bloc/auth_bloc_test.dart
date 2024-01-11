@@ -6,7 +6,7 @@ import 'package:tictactoe_game/core/error/failure.dart';
 import 'package:tictactoe_game/domain/entities/user.dart';
 import 'package:tictactoe_game/features/auth/logic/auth_bloc/auth_bloc.dart';
 
-import '../../mocks/mocks.dart';
+import '../../../utils/mocks/mocks.dart';
 
 void main() {
   late MockSignInUseCase mockSignInUseCase;

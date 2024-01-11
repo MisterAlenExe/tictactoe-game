@@ -7,7 +7,7 @@ import 'package:tictactoe_game/data/models/user_model.dart';
 import 'package:tictactoe_game/data/repositories/auth_repository_impl.dart';
 import 'package:tictactoe_game/domain/entities/user.dart';
 
-import '../../mocks/mocks.dart';
+import '../../utils/mocks/mocks.dart';
 
 void main() {
   late MockAuthDataSource mockAuthDataSource;

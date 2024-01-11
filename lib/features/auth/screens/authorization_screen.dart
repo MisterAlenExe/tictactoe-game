@@ -15,9 +15,14 @@ class AuthorizationScreen extends StatefulWidget {
 }
 
 class _AuthorizationScreenState extends State<AuthorizationScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
+  final TextEditingController _loginEmailController = TextEditingController();
+  final TextEditingController _loginPasswordController =
+      TextEditingController();
+  final TextEditingController _registerEmailController =
+      TextEditingController();
+  final TextEditingController _registerPasswordController =
+      TextEditingController();
+  final TextEditingController _registerConfirmPasswordController =
       TextEditingController();
 
   bool _isLogin = true;
@@ -26,17 +31,21 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) => previous != current,
       listener: (context, state) {
         if (state is AuthError) {
           setState(() {
             _isButtonEnabled = true;
           });
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                key: const Key('auth_error_snackbar'),
+                content: Text(state.message),
+              ),
+            );
         }
       },
       child: Scaffold(
@@ -80,13 +89,13 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              controller: _emailController,
+              controller: _loginEmailController,
               hintText: 'Email',
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              controller: _passwordController,
+              controller: _loginPasswordController,
               hintText: 'Password',
               obscureText: true,
             ),
@@ -101,8 +110,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
                   context.read<AuthBloc>().add(
                         SignInEvent(
-                          email: _emailController.text,
-                          password: _passwordController.text,
+                          email: _loginEmailController.text,
+                          password: _loginPasswordController.text,
                         ),
                       );
                 },
@@ -139,19 +148,19 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              controller: _emailController,
+              controller: _registerEmailController,
               hintText: 'Email',
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              controller: _passwordController,
+              controller: _registerPasswordController,
               hintText: 'Password',
               obscureText: true,
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              controller: _confirmPasswordController,
+              controller: _registerConfirmPasswordController,
               hintText: 'Confirm Password',
               obscureText: true,
             ),
@@ -164,12 +173,12 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                     _isButtonEnabled = false;
                   });
 
-                  if (_passwordController.text ==
-                      _confirmPasswordController.text) {
+                  if (_loginPasswordController.text ==
+                      _registerConfirmPasswordController.text) {
                     context.read<AuthBloc>().add(
                           SignUpEvent(
-                            email: _emailController.text,
-                            password: _passwordController.text,
+                            email: _loginEmailController.text,
+                            password: _loginPasswordController.text,
                           ),
                         );
                   } else {

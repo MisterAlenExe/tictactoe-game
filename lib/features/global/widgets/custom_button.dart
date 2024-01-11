@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tictactoe_game/features/global/widgets/loading_indicator.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -33,9 +34,7 @@ class CustomButton extends StatelessWidget {
           : const SizedBox(
               height: 24,
               width: 24,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
+              child: LoadingIndicator(),
             ),
     );
   }
