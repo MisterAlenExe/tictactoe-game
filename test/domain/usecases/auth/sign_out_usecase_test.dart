@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/domain/usecases/auth/sign_out.dart';
 
-import '../../utils/mocks/mocks.dart';
+import '../../../utils/mocks/mocks.dart';
 
 void main() {
   late MockAuthRepository mockAuthRepository;

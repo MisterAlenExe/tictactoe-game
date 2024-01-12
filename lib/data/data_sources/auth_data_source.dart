@@ -34,7 +34,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       email: email,
       password: password,
     );
-    return UserModel.fromFirebase(userCredential.user!);
+    return UserModel.fromFirebaseUser(userCredential.user!);
   }
 
   @override
@@ -50,8 +50,8 @@ class AuthDataSourceImpl implements AuthDataSource {
     await firebaseFirestore
         .collection('users')
         .doc(userCredential.user!.uid)
-        .set(UserModel.fromFirebase(userCredential.user!).toFirebase());
-    return UserModel.fromFirebase(userCredential.user!);
+        .set(UserModel.fromFirebaseUser(userCredential.user!).toJson());
+    return UserModel.fromFirebaseUser(userCredential.user!);
   }
 
   @override
@@ -61,6 +61,6 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Stream<UserModel> getUser() {
-    return firebaseAuth.authStateChanges().map(UserModel.fromFirebase);
+    return firebaseAuth.authStateChanges().map(UserModel.fromFirebaseUser);
   }
 }

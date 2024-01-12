@@ -2,25 +2,25 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/domain/entities/user.dart';
-import 'package:tictactoe_game/domain/usecases/auth/sign_in.dart';
+import 'package:tictactoe_game/domain/usecases/auth/sign_up.dart';
 
-import '../../utils/mocks/mocks.dart';
+import '../../../utils/mocks/mocks.dart';
 
 void main() {
   late MockAuthRepository mockAuthRepository;
-  late SignInUseCase signInUseCase;
+  late SignUpUseCase signUpUseCase;
 
   setUpAll(() {
     mockAuthRepository = MockAuthRepository();
-    signInUseCase = SignInUseCase(authRepository: mockAuthRepository);
+    signUpUseCase = SignUpUseCase(authRepository: mockAuthRepository);
   });
 
-  const email = "test@email.com";
-  const password = "test!password";
+  const email = "test@gmail.com";
+  const password = "password";
 
   const user = UserEntity(
-    uid: "test-uid",
-    email: "test@email.com",
+    uid: "uid",
+    email: "test@gmail.com",
   );
 
   test(
@@ -28,7 +28,7 @@ void main() {
     () async {
       // arrange
       when(
-        () => mockAuthRepository.signIn(
+        () => mockAuthRepository.signUp(
           email: email,
           password: password,
         ),
@@ -37,7 +37,7 @@ void main() {
       );
 
       // act
-      final result = await signInUseCase.execute(
+      final result = await signUpUseCase.execute(
         email: email,
         password: password,
       );

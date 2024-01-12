@@ -27,7 +27,7 @@ void main() {
       when(() => firestoreUser.email).thenReturn('email');
 
       // act
-      final result = UserModel.fromFirebase(firestoreUser);
+      final result = UserModel.fromFirebaseUser(firestoreUser);
 
       // assert
       expect(result, testUserModel);
@@ -38,7 +38,7 @@ void main() {
     "should return a valid model to Firestore",
     () {
       // act
-      final result = testUserModel.toFirebase();
+      final result = testUserModel.toJson();
 
       // assert
       expect(result, expectedFirebaseMap);

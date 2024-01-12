@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/domain/entities/user.dart';
 import 'package:tictactoe_game/domain/usecases/auth/get_user.dart';
 
-import '../../utils/mocks/mocks.dart';
+import '../../../utils/mocks/mocks.dart';
 
 void main() {
   late MockAuthRepository mockAuthRepository;

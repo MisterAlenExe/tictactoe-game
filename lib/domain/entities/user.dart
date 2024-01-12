@@ -17,4 +17,6 @@ class UserEntity extends Equatable {
 
   @override
   List<Object?> get props => [uid, email];
+
+  toJson() {}
 }
