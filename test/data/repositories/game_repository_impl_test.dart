@@ -3,10 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/data/models/game_model.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
 import 'package:tictactoe_game/data/repositories/game_repository_impl.dart';
-import 'package:tictactoe_game/domain/entities/game.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 
 import '../../utils/mocks/mocks.dart';
 
@@ -26,13 +25,13 @@ void main() {
   group(
     'createGame',
     () {
-      final gameEntity = GameEntity(
+      final gameModel = GameModel(
         uid: '',
-        firstPlayer: const UserEntity(
+        firstPlayer: const UserModel(
           uid: 'test-uid',
           email: 'test@email.com',
         ),
-        secondPlayer: const UserEntity.empty(),
+        secondPlayer: const UserModel.empty(),
         currentTurn: null,
         winner: null,
         status: GameStatus.waiting,
@@ -45,7 +44,7 @@ void main() {
           // arrange
           when(
             () => mockGameDataSource.createGame(
-              game: GameModel.fromEntity(gameEntity),
+              game: gameModel,
             ),
           ).thenAnswer(
             (_) async => Future.value(),
@@ -53,7 +52,7 @@ void main() {
 
           // act
           final result = await gameRepositoryImpl.createGame(
-            player: gameEntity.firstPlayer!,
+            player: gameModel.firstPlayer!,
           );
 
           // assert
@@ -67,7 +66,7 @@ void main() {
           // arrange
           when(
             () => mockGameDataSource.createGame(
-              game: GameModel.fromEntity(gameEntity),
+              game: gameModel,
             ),
           ).thenThrow(FirebaseException(
             plugin: 'test',
@@ -77,7 +76,7 @@ void main() {
 
           // act
           final result = await gameRepositoryImpl.createGame(
-            player: gameEntity.firstPlayer!,
+            player: gameModel.firstPlayer!,
           );
 
           // assert
@@ -97,13 +96,13 @@ void main() {
   group(
     'joinGame',
     () {
-      GameEntity gameEntity = GameEntity(
+      GameModel gameModel = GameModel(
         uid: '',
-        firstPlayer: const UserEntity(
+        firstPlayer: const UserModel(
           uid: 'test-uid-1',
           email: 'test-email-1',
         ),
-        secondPlayer: const UserEntity(
+        secondPlayer: const UserModel(
           uid: 'test-uid-2',
           email: 'test-email-2',
         ),
@@ -112,7 +111,7 @@ void main() {
         status: GameStatus.playing,
         board: List.generate(9, (index) => ''),
       );
-      const secondPlayer = UserEntity(
+      const secondPlayer = UserModel(
         uid: 'test-uid-2',
         email: 'test-email-2',
       );
@@ -122,16 +121,14 @@ void main() {
         () async {
           // arrange
           when(
-            () => mockGameDataSource.updateGame(
-              game: GameModel.fromEntity(gameEntity),
-            ),
+            () => mockGameDataSource.updateGame(game: gameModel),
           ).thenAnswer(
             (_) async => Future.value(),
           );
 
           // act
           final result = await gameRepositoryImpl.joinGame(
-            game: gameEntity,
+            game: gameModel,
             player: secondPlayer,
           );
 
@@ -145,9 +142,7 @@ void main() {
         () async {
           // arrange
           when(
-            () => mockGameDataSource.updateGame(
-              game: GameModel.fromEntity(gameEntity),
-            ),
+            () => mockGameDataSource.updateGame(game: gameModel),
           ).thenThrow(FirebaseException(
             plugin: 'test',
             message: 'test',
@@ -156,7 +151,7 @@ void main() {
 
           // act
           final result = await gameRepositoryImpl.joinGame(
-            game: gameEntity,
+            game: gameModel,
             player: secondPlayer,
           );
 
@@ -177,13 +172,13 @@ void main() {
   group(
     'makeMove',
     () {
-      const gameEntity = GameEntity(
+      const gameModel = GameModel(
         uid: '',
-        firstPlayer: UserEntity(
+        firstPlayer: UserModel(
           uid: 'test-uid-1',
           email: 'test-email-1',
         ),
-        secondPlayer: UserEntity(
+        secondPlayer: UserModel(
           uid: 'test-uid-2',
           email: 'test-email-2',
         ),
@@ -199,9 +194,7 @@ void main() {
           // arrange
           when(
             () => mockGameDataSource.updateGame(
-              game: GameModel.fromEntity(
-                gameEntity.copyWith(currentTurn: 'test-uid-2'),
-              ),
+              game: gameModel.copyWith(currentTurn: 'test-uid-2'),
             ),
           ).thenAnswer(
             (_) async => Future.value(),
@@ -209,7 +202,7 @@ void main() {
 
           // act
           final result = await gameRepositoryImpl.makeMove(
-            game: gameEntity,
+            game: gameModel,
             index: 0,
           );
 
@@ -224,9 +217,7 @@ void main() {
           // arrange
           when(
             () => mockGameDataSource.updateGame(
-              game: GameModel.fromEntity(
-                gameEntity.copyWith(currentTurn: 'test-uid-2'),
-              ),
+              game: gameModel.copyWith(currentTurn: 'test-uid-2'),
             ),
           ).thenThrow(FirebaseException(
             plugin: 'test',
@@ -236,7 +227,7 @@ void main() {
 
           // act
           final result = await gameRepositoryImpl.makeMove(
-            game: gameEntity,
+            game: gameModel,
             index: 0,
           );
 

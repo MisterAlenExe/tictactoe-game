@@ -1,26 +1,26 @@
 import 'package:dartz/dartz.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/domain/entities/game.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 
 abstract class GameRepository {
-  Either<Failure, Stream<List<GameEntity>>> getGamesStream();
+  Either<Failure, Stream<List<GameModel>>> getGamesStream();
 
-  Either<Failure, Stream<GameEntity>> getGameStreamById({
+  Either<Failure, Stream<GameModel>> getGameStreamById({
     required String uid,
   });
 
   Future<Either<Failure, void>> createGame({
-    required UserEntity player,
+    required UserModel player,
   });
 
   Future<Either<Failure, void>> joinGame({
-    required GameEntity game,
-    required UserEntity player,
+    required GameModel game,
+    required UserModel player,
   });
 
   Future<Either<Failure, void>> makeMove({
-    required GameEntity game,
+    required GameModel game,
     required int index,
   });
 }

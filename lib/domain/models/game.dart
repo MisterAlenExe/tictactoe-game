@@ -1,18 +1,20 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 
-import 'package:tictactoe_game/domain/entities/user.dart';
+part 'game.g.dart';
 
-class GameEntity extends Equatable {
+@JsonSerializable()
+class GameModel extends Equatable {
   final String uid;
-  final UserEntity? firstPlayer;
-  final UserEntity? secondPlayer;
+  final UserModel? firstPlayer;
+  final UserModel? secondPlayer;
   final String? currentTurn;
   final String? winner;
   final GameStatus status;
   final List<String> board;
 
-  const GameEntity({
+  const GameModel({
     required this.uid,
     required this.firstPlayer,
     required this.secondPlayer,
@@ -22,20 +24,16 @@ class GameEntity extends Equatable {
     required this.board,
   });
 
-  @override
-  List<Object?> get props =>
-      [uid, firstPlayer, secondPlayer, currentTurn, winner, status, board];
-
-  GameEntity copyWith({
+  GameModel copyWith({
     String? uid,
-    UserEntity? firstPlayer,
-    UserEntity? secondPlayer,
+    UserModel? firstPlayer,
+    UserModel? secondPlayer,
     String? currentTurn,
     String? winner,
     GameStatus? status,
     List<String>? board,
   }) {
-    return GameEntity(
+    return GameModel(
       uid: uid ?? this.uid,
       firstPlayer: firstPlayer ?? this.firstPlayer,
       secondPlayer: secondPlayer ?? this.secondPlayer,
@@ -45,6 +43,28 @@ class GameEntity extends Equatable {
       board: board ?? this.board,
     );
   }
+
+  factory GameModel.fromJson(Map<String, dynamic> json) {
+    return GameModel(
+      uid: json['uid'] as String,
+      firstPlayer: json['firstPlayer'] == null
+          ? null
+          : UserModel.fromJson(json['firstPlayer'] as Map<String, dynamic>),
+      secondPlayer: json['secondPlayer'] == null
+          ? null
+          : UserModel.fromJson(json['secondPlayer'] as Map<String, dynamic>),
+      currentTurn: json['currentTurn'] as String?,
+      winner: json['winner'] as String?,
+      status: $enumDecode(_$GameStatusEnumMap, json['status']),
+      board: (json['board'] as List<dynamic>).map((e) => e as String).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => _$GameModelToJson(this);
+
+  @override
+  List<Object?> get props =>
+      [uid, firstPlayer, secondPlayer, currentTurn, winner, status, board];
 }
 
 enum GameStatus {

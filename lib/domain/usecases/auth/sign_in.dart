@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/repositories/auth_repository.dart';
 
 class SignInUseCase {
@@ -8,7 +8,7 @@ class SignInUseCase {
 
   SignInUseCase({required this.authRepository});
 
-  Future<Either<Failure, UserEntity>> execute({
+  Future<Either<Failure, UserModel>> execute({
     required String email,
     required String password,
   }) async {

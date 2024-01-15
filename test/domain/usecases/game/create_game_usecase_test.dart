@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/usecases/game/create_game.dart';
 
 import '../../../utils/mocks/mocks.dart';
@@ -15,7 +15,7 @@ void main() {
     createGameUseCase = CreateGameUseCase(gameRepository: mockGameRepository);
   });
 
-  const player = UserEntity(
+  const player = UserModel(
     uid: 'test-uid',
     email: 'test@email.com',
   );

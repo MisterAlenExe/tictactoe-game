@@ -1,39 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tictactoe_game/models/game_model.dart';
-import 'package:tictactoe_game/models/user_model.dart';
-import 'package:tictactoe_game/services/game_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
+import 'package:tictactoe_game/features/game/logic/games_bloc/game_bloc.dart';
+import 'package:tictactoe_game/features/auth/logic/session_provider.dart';
 
-class TicTacToeBoard extends StatefulWidget {
+class GameScreen extends StatefulWidget {
+  static const routeName = '/board';
+
   final String gameUid;
 
-  const TicTacToeBoard({
+  const GameScreen({
     super.key,
     required this.gameUid,
   });
 
   @override
-  State<TicTacToeBoard> createState() => _TicTacToeBoardState();
+  State<GameScreen> createState() => _GameScreenState();
 }
 
-class _TicTacToeBoardState extends State<TicTacToeBoard> {
+class _GameScreenState extends State<GameScreen> {
+  Widget _buildWidget = const Center(
+    child: CircularProgressIndicator(),
+  );
+
+  @override
+  void initState() {
+    context.read<GameBloc>().add(GetGameByIdEvent(uid: widget.gameUid));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<User>(context);
-    final GameService gameService = Provider.of<GameService>(context);
+    final user = context.read<SessionProvider>().user;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Tic Tac Toe"),
         centerTitle: true,
       ),
-      body: StreamBuilder<Game>(
-        stream: gameService.getGameStream(widget.gameUid),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Game game = snapshot.data!;
+      body: BlocBuilder<GameBloc, GameState>(
+        builder: (context, state) {
+          if (state is GameLoadedState) {
+            GameModel game = state.game;
 
-            return IgnorePointer(
+            _buildWidget = IgnorePointer(
               ignoring: game.status != GameStatus.playing,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -64,10 +74,12 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
                           onTap: () {
                             if (game.board[index].isEmpty &&
                                 game.currentTurn == user.uid) {
-                              gameService.makeMove(
-                                game: game,
-                                index: index,
-                              );
+                              context.read<GameBloc>().add(
+                                    MakeMoveEvent(
+                                      game: game,
+                                      index: index,
+                                    ),
+                                  );
                             }
                           },
                           child: AnimatedContainer(
@@ -103,7 +115,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
                           child: Text(
                             game.winner == user.uid
                                 ? "You Won!"
-                                : game.winner!.isEmpty
+                                : game.winner == null
                                     ? "It's a Draw!"
                                     : "You Lost!",
                             style: TextStyle(
@@ -111,7 +123,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
                               fontWeight: FontWeight.bold,
                               color: game.winner == user.uid
                                   ? Colors.green
-                                  : game.winner!.isEmpty
+                                  : game.winner == null
                                       ? Colors.grey
                                       : Colors.red,
                             ),
@@ -121,11 +133,8 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
                 ],
               ),
             );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
           }
+          return _buildWidget;
         },
       ),
     );

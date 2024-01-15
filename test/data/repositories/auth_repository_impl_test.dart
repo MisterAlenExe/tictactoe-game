@@ -3,9 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/data/models/user_model.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/data/repositories/auth_repository_impl.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
 
 import '../../utils/mocks/mocks.dart';
 
@@ -23,7 +22,7 @@ void main() {
   const email = 'test@email.com';
   const password = 'test!password';
 
-  const userEntity = UserEntity(
+  const userEntity = UserModel(
     uid: 'test-uid',
     email: email,
   );

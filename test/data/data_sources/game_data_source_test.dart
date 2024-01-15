@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tictactoe_game/data/data_sources/game_data_source.dart';
-import 'package:tictactoe_game/data/models/game_model.dart';
-import 'package:tictactoe_game/data/models/user_model.dart';
-import 'package:tictactoe_game/domain/entities/game.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 
 void main() {
   late GameDataSourceImpl gameDataSourceImpl;
@@ -19,7 +17,7 @@ void main() {
         uid: "uid-player-1-$index",
         email: "email-player-1-$index",
       ),
-      secondPlayer: UserModel.fromEntity(const UserEntity.empty()),
+      secondPlayer: const UserModel.empty(),
       currentTurn: null,
       winner: null,
       status: GameStatus.waiting,
@@ -27,7 +25,7 @@ void main() {
     ),
   );
 
-  setDummyFirestore(CollectionReference<GameModel> gamesCollection) {
+  setDummyFirestore(CollectionReference<GameModel> gamesCollection) async {
     for (var game in gamesList) {
       gamesCollection.doc(game.uid).set(game);
     }
@@ -99,7 +97,7 @@ void main() {
               uid: "uid-player-1-6",
               email: "email-player-1-6",
             ),
-            secondPlayer: UserModel.fromEntity(const UserEntity.empty()),
+            secondPlayer: const UserModel.empty(),
             currentTurn: null,
             winner: null,
             status: GameStatus.waiting,
@@ -117,8 +115,7 @@ void main() {
               )
               .get()
               .then((value) => value.docs[0].data());
-          expectedGame =
-              GameModel.fromEntity(expectedGame.copyWith(uid: actualGame!.uid));
+          expectedGame = expectedGame.copyWith(uid: actualGame!.uid);
           expect(actualGame, expectedGame);
         },
       );

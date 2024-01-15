@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tictactoe_game/data/models/user_model.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 
 abstract class AuthDataSource {
   Future<UserModel> signIn({

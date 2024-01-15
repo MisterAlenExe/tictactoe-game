@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tictactoe_game/data/models/game_model.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
 
 abstract class GameDataSource {
   Stream<List<GameModel>> getGames();
@@ -46,20 +46,9 @@ class GameDataSourceImpl extends GameDataSource {
   Future<void> createGame({required GameModel game}) {
     final DocumentReference newGameRef = _gamesCollection.doc();
 
-    return newGameRef
-        .set(
-      GameModel.fromEntity(
-        game.copyWith(uid: newGameRef.id),
-      ),
-    )
-        .then((value) {
-      // print all games
-      _gamesCollection.get().then((value) {
-        for (var element in value.docs) {
-          print(element.data());
-        }
-      });
-    });
+    return newGameRef.set(
+      game.copyWith(uid: newGameRef.id),
+    );
   }
 
   @override

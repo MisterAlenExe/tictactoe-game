@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/features/auth/logic/auth_bloc/auth_bloc.dart';
 
 import '../../../utils/mocks/mocks.dart';
@@ -25,7 +25,7 @@ void main() {
   const email = 'test@email.com';
   const password = 'test!password';
 
-  const userEntity = UserEntity(
+  const userEntity = UserModel(
     uid: 'test-uid',
     email: 'test@email.com',
   );

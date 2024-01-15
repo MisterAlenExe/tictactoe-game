@@ -16,14 +16,10 @@ import 'package:tictactoe_game/domain/usecases/game/get_games.dart';
 import 'package:tictactoe_game/domain/usecases/game/join_game.dart';
 import 'package:tictactoe_game/domain/usecases/game/make_move.dart';
 import 'package:tictactoe_game/features/auth/logic/auth_bloc/auth_bloc.dart';
-import 'package:tictactoe_game/features/auth/logic/session_cubit/session_cubit.dart';
 
 // Bloc mocks
 
 class MockAuthBloc extends MockBloc<AuthEvent, AuthState> implements AuthBloc {}
-
-class MockSessionCubit extends MockCubit<SessionState>
-    implements SessionCubit {}
 
 // Use case mocks
 

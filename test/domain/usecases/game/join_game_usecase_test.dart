@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:tictactoe_game/domain/entities/game.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/usecases/game/join_game.dart';
 
 import '../../../utils/mocks/mocks.dart';
@@ -16,13 +16,13 @@ void main() {
     joinGameUseCase = JoinGameUseCase(gameRepository: mockGameRepository);
   });
 
-  const game = GameEntity(
+  const game = GameModel(
     uid: 'test-uid',
-    firstPlayer: UserEntity(
+    firstPlayer: UserModel(
       uid: 'test-player1-uid',
       email: 'test-player1-email',
     ),
-    secondPlayer: UserEntity(
+    secondPlayer: UserModel(
       uid: 'test-player2-uid',
       email: 'test-player2-email',
     ),
@@ -32,7 +32,7 @@ void main() {
     status: GameStatus.waiting,
   );
 
-  const player = UserEntity(
+  const player = UserModel(
     uid: 'test-player2-uid',
     email: 'test-player2-email',
   );

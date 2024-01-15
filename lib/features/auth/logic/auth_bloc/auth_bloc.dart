@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/usecases/auth/sign_in.dart';
 import 'package:tictactoe_game/domain/usecases/auth/sign_up.dart';
 

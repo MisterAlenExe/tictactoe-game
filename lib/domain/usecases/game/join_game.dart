@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/domain/entities/game.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/game.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/repositories/game_repository.dart';
 
 class JoinGameUseCase {
@@ -10,8 +10,8 @@ class JoinGameUseCase {
   JoinGameUseCase({required this.gameRepository});
 
   Future<Either<Failure, void>> execute({
-    required GameEntity game,
-    required UserEntity player,
+    required GameModel game,
+    required UserModel player,
   }) {
     return gameRepository.joinGame(game: game, player: player);
   }

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/repositories/game_repository.dart';
 
 class CreateGameUseCase {
@@ -8,7 +8,7 @@ class CreateGameUseCase {
 
   CreateGameUseCase({required this.gameRepository});
 
-  Future<Either<Failure, void>> execute({required UserEntity player}) {
+  Future<Either<Failure, void>> execute({required UserModel player}) {
     return gameRepository.createGame(player: player);
   }
 }

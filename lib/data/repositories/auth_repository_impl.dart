@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
 import 'package:tictactoe_game/data/data_sources/auth_data_source.dart';
-import 'package:tictactoe_game/domain/entities/user.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 import 'package:tictactoe_game/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
@@ -11,7 +11,7 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl({required this.authDataSource});
 
   @override
-  Either<Failure, Stream<UserEntity>> getUser() {
+  Either<Failure, Stream<UserModel>> getUser() {
     try {
       final result = authDataSource.getUser();
       return Right(result);
@@ -21,7 +21,7 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> signIn({
+  Future<Either<Failure, UserModel>> signIn({
     required String email,
     required String password,
   }) async {
@@ -30,14 +30,14 @@ class AuthRepositoryImpl extends AuthRepository {
         email: email,
         password: password,
       );
-      return Right(user.toEntity());
+      return Right(user);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(message: e.message ?? ''));
     }
   }
 
   @override
-  Future<Either<Failure, UserEntity>> signUp({
+  Future<Either<Failure, UserModel>> signUp({
     required String email,
     required String password,
   }) async {
@@ -46,7 +46,7 @@ class AuthRepositoryImpl extends AuthRepository {
         email: email,
         password: password,
       );
-      return Right(user.toEntity());
+      return Right(user);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(message: e.message ?? ''));
     }

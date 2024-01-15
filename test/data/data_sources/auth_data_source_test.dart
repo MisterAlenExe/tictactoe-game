@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/data/data_sources/auth_data_source.dart';
-import 'package:tictactoe_game/data/models/user_model.dart';
+import 'package:tictactoe_game/domain/models/user.dart';
 
 import '../../utils/mocks/mocks.dart';
 
