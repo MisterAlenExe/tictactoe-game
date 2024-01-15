@@ -85,4 +85,6 @@ void main() {
       },
     );
   });
+
+  // TODO: add tests for signUp and signOut
 }

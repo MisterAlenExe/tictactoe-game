@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
 import 'package:tictactoe_game/core/utils.dart';
@@ -16,9 +17,13 @@ class GameRepositoryImpl extends GameRepository {
   Either<Failure, Stream<List<GameEntity>>> getGamesStream() {
     try {
       final result = gameDataSource.getGames();
-      return Right(result);
-    } catch (e) {
-      return Left(FirestoreFailure(message: e.toString()));
+      return Right(
+        result.map(
+          (event) => event.map((e) => e.toEntity()).toList(),
+        ),
+      );
+    } on FirebaseException catch (e) {
+      return Left(FirestoreFailure(message: e.message ?? ''));
     }
   }
 
@@ -28,9 +33,9 @@ class GameRepositoryImpl extends GameRepository {
   }) {
     try {
       final result = gameDataSource.getGameById(uid: uid);
-      return Right(result);
-    } catch (e) {
-      return Left(FirestoreFailure(message: e.toString()));
+      return Right(result.map((event) => event.toEntity()));
+    } on FirebaseException catch (e) {
+      return Left(FirestoreFailure(message: e.message ?? ''));
     }
   }
 
@@ -52,8 +57,8 @@ class GameRepositoryImpl extends GameRepository {
       await gameDataSource.createGame(game: GameModel.fromEntity(game));
 
       return const Right(null);
-    } catch (e) {
-      return Left(FirestoreFailure(message: e.toString()));
+    } on FirebaseException catch (e) {
+      return Left(FirestoreFailure(message: e.message ?? ''));
     }
   }
 
@@ -72,8 +77,8 @@ class GameRepositoryImpl extends GameRepository {
       gameDataSource.updateGame(game: GameModel.fromEntity(updatedGame));
 
       return const Right(null);
-    } catch (e) {
-      return Left(FirestoreFailure(message: e.toString()));
+    } on FirebaseException catch (e) {
+      return Left(FirestoreFailure(message: e.message ?? ''));
     }
   }
 
@@ -114,8 +119,8 @@ class GameRepositoryImpl extends GameRepository {
       }
 
       return const Right(null);
-    } catch (e) {
-      return Left(FirestoreFailure(message: e.toString()));
+    } on FirebaseException catch (e) {
+      return Left(FirestoreFailure(message: e.message ?? ''));
     }
   }
 }

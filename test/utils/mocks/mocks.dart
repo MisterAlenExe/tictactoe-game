@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:tictactoe_game/data/data_sources/auth_data_source.dart';
+import 'package:tictactoe_game/data/data_sources/game_data_source.dart';
 import 'package:tictactoe_game/domain/repositories/auth_repository.dart';
 import 'package:tictactoe_game/domain/repositories/game_repository.dart';
 import 'package:tictactoe_game/domain/usecases/auth/get_user.dart';
@@ -53,6 +54,8 @@ class MockGameRepository extends Mock implements GameRepository {}
 // Data source mocks
 
 class MockAuthDataSource extends Mock implements AuthDataSource {}
+
+class MockGameDataSource extends Mock implements GameDataSource {}
 
 // Firebase mocks
 
