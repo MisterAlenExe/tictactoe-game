@@ -35,35 +35,35 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   _onGetGames(
     GetGamesListEvent event,
     Emitter<GameState> emit,
-  ) {
+  ) async {
     emit(GameLoadingState());
 
     final result = getGamesUseCase.execute();
 
-    result.fold(
-      (failure) => emit(GameErrorState(message: failure.message)),
-      (gamesStream) => emit.forEach(
-        gamesStream,
-        onData: (games) => GamesLoadedState(games: games),
-      ),
-    );
+    await for (final event in result) {
+      event.fold(
+        (failure) => emit(GameErrorState(message: failure.message)),
+        (games) => emit(GamesLoadedState(games: games)),
+      );
+    }
   }
 
-  void _onGetGameById(
+  _onGetGameById(
     GetGameByIdEvent event,
     Emitter<GameState> emit,
-  ) {
+  ) async {
     emit(GameLoadingState());
 
-    final result = getGameByIdUseCase.execute(uid: event.uid);
-
-    result.fold(
-      (failure) => emit(GameErrorState(message: failure.message)),
-      (gameStream) => emit.forEach(
-        gameStream,
-        onData: (game) => GameLoadedState(game: game),
-      ),
+    final result = getGameByIdUseCase.execute(
+      uid: event.uid,
     );
+
+    await for (final event in result) {
+      event.fold(
+        (failure) => emit(GameErrorState(message: failure.message)),
+        (game) => emit(GameLoadedState(game: game)),
+      );
+    }
   }
 
   void _onCreateGame(

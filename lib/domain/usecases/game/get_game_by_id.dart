@@ -8,7 +8,7 @@ class GetGameByIdUseCase {
 
   GetGameByIdUseCase({required this.gameRepository});
 
-  Either<Failure, Stream<GameModel>> execute({required String uid}) {
+  Stream<Either<Failure, GameModel>> execute({required String uid}) {
     return gameRepository.getGameStreamById(uid: uid);
   }
 }

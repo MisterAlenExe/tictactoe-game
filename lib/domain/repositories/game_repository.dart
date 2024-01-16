@@ -4,9 +4,9 @@ import 'package:tictactoe_game/domain/models/game.dart';
 import 'package:tictactoe_game/domain/models/user.dart';
 
 abstract class GameRepository {
-  Either<Failure, Stream<List<GameModel>>> getGamesStream();
+  Stream<Either<Failure, List<GameModel>>> getGamesStream();
 
-  Either<Failure, Stream<GameModel>> getGameStreamById({
+  Stream<Either<Failure, GameModel>> getGameStreamById({
     required String uid,
   });
 

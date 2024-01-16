@@ -8,7 +8,7 @@ class GetGamesUseCase {
 
   GetGamesUseCase({required this.gameRepository});
 
-  Either<Failure, Stream<List<GameModel>>> execute() {
+  Stream<Either<Failure, List<GameModel>>> execute() {
     return gameRepository.getGamesStream();
   }
 }
