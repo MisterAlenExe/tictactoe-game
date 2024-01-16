@@ -8,7 +8,7 @@ class GetUserUseCase {
 
   GetUserUseCase({required this.authRepository});
 
-  Either<Failure, Stream<UserModel>> execute() {
+  Stream<Either<Failure, UserModel>> execute() {
     return authRepository.getUser();
   }
 }

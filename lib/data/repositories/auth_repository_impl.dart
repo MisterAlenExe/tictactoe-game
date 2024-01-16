@@ -11,12 +11,15 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl({required this.authDataSource});
 
   @override
-  Either<Failure, Stream<UserModel>> getUser() {
+  Stream<Either<Failure, UserModel>> getUser() async* {
     try {
-      final result = authDataSource.getUser();
-      return Right(result);
+      yield* authDataSource.getUser().map(
+            (user) => right<Failure, UserModel>(user),
+          );
     } on FirebaseAuthException catch (e) {
-      return Left(AuthFailure(message: e.message ?? ''));
+      yield left<Failure, UserModel>(
+        AuthFailure(message: e.message ?? ''),
+      );
     }
   }
 

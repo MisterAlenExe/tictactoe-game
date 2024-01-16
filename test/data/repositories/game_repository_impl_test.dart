@@ -20,7 +20,162 @@ void main() {
     );
   });
 
-  // TODO: add tests for getGamesStream and getGameStreamById
+  group(
+    'getGamesStream',
+    () {
+      final gamesList = List.generate(
+        10,
+        (index) => GameModel(
+          uid: 'test-uid-$index',
+          firstPlayer: const UserModel(
+            uid: 'test-uid-1',
+            email: 'test-email-1',
+          ),
+          secondPlayer: const UserModel(
+            uid: 'test-uid-2',
+            email: 'test-email-2',
+          ),
+          currentTurn: 'test-uid-1',
+          winner: null,
+          status: GameStatus.playing,
+          board: List.generate(9, (index) => ''),
+        ),
+      );
+
+      test(
+        'should return a list of games when the call to gameDataSource is successful',
+        () async {
+          // arrange
+          when(
+            () => mockGameDataSource.getGames(),
+          ).thenAnswer(
+            (_) => Stream.value(gamesList),
+          );
+
+          // act
+          final result = gameRepositoryImpl.getGamesStream();
+
+          // assert
+          expect(
+            result,
+            emitsInOrder(
+              [
+                Right(gamesList),
+              ],
+            ),
+          );
+        },
+      );
+
+      test(
+        'should return a FirestoreFailure when the call to gameDataSource is unsuccessful',
+        () async {
+          // arrange
+          when(
+            () => mockGameDataSource.getGames(),
+          ).thenThrow(FirebaseException(
+            plugin: 'test',
+            message: 'test',
+            code: 'test',
+          ));
+
+          // act
+          final result = gameRepositoryImpl.getGamesStream();
+
+          // assert
+          expect(
+            result,
+            emitsInOrder(
+              [
+                const Left(
+                  FirestoreFailure(message: 'test'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+
+  group(
+    'getGameStreamById',
+    () {
+      final gameModel = GameModel(
+        uid: 'test-uid',
+        firstPlayer: const UserModel(
+          uid: 'test-uid-1',
+          email: 'test-email-1',
+        ),
+        secondPlayer: const UserModel(
+          uid: 'test-uid-2',
+          email: 'test-email-2',
+        ),
+        currentTurn: 'test-uid-1',
+        winner: null,
+        status: GameStatus.playing,
+        board: List.generate(9, (index) => ''),
+      );
+
+      test(
+        'should return a game when the call to gameDataSource is successful',
+        () async {
+          // arrange
+          when(
+            () => mockGameDataSource.getGameById(uid: 'test-uid'),
+          ).thenAnswer(
+            (_) => Stream.value(gameModel),
+          );
+
+          // act
+          final result = gameRepositoryImpl.getGameStreamById(
+            uid: 'test-uid',
+          );
+
+          // assert
+          expect(
+            result,
+            emitsInOrder(
+              [
+                Right(gameModel),
+              ],
+            ),
+          );
+        },
+      );
+
+      test(
+        'should return a FirestoreFailure when the call to gameDataSource is unsuccessful',
+        () async {
+          // arrange
+          when(
+            () => mockGameDataSource.getGameById(uid: 'test-uid'),
+          ).thenThrow(FirebaseException(
+            plugin: 'test',
+            message: 'test',
+            code: 'test',
+          ));
+
+          // act
+          final result = gameRepositoryImpl.getGameStreamById(
+            uid: 'test-uid',
+          );
+
+          // assert
+          expect(
+            result,
+            emitsInOrder(
+              [
+                const Left(
+                  FirestoreFailure(message: 'test'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
 
   group(
     'createGame',

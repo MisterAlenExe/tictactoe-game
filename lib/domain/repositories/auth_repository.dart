@@ -3,7 +3,7 @@ import 'package:tictactoe_game/core/error/failure.dart';
 import 'package:tictactoe_game/domain/models/user.dart';
 
 abstract class AuthRepository {
-  Either<Failure, Stream<UserModel>> getUser();
+  Stream<Either<Failure, UserModel>> getUser();
 
   Future<Either<Failure, UserModel>> signIn({
     required String email,

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:tictactoe_game/core/error/failure.dart';
 import 'package:tictactoe_game/core/utils.dart';
 import 'package:tictactoe_game/data/data_sources/game_data_source.dart';
@@ -15,35 +14,34 @@ class GameRepositoryImpl extends GameRepository {
 
   @override
   Stream<Either<Failure, List<GameModel>>> getGamesStream() async* {
-    yield* gameDataSource.getGames().map(
-      (games) {
-        return right<Failure, List<GameModel>>(games);
-      },
-    ).onErrorReturnWith(
-      (error, stackTrace) {
-        return left(
-          FirestoreFailure(message: error.toString()),
-        );
-      },
-    );
+    try {
+      yield* gameDataSource.getGames().map(
+        (games) {
+          return right<Failure, List<GameModel>>(games);
+        },
+      );
+    } on FirebaseException catch (e) {
+      yield left<Failure, List<GameModel>>(
+        FirestoreFailure(message: e.message ?? ''),
+      );
+    }
   }
 
   @override
   Stream<Either<Failure, GameModel>> getGameStreamById({
     required String uid,
   }) async* {
-    yield* gameDataSource
-        .getGameById(uid: uid)
-        .map(
-          (game) => right<Failure, GameModel>(game),
-        )
-        .onErrorReturnWith(
-      (error, stackTrace) {
-        return left(
-          FirestoreFailure(message: error.toString()),
-        );
-      },
-    );
+    try {
+      yield* gameDataSource.getGameById(uid: uid).map(
+        (game) {
+          return right<Failure, GameModel>(game);
+        },
+      );
+    } on FirebaseException catch (e) {
+      yield left<Failure, GameModel>(
+        FirestoreFailure(message: e.message ?? ''),
+      );
+    }
   }
 
   @override
